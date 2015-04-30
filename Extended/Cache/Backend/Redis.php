@@ -61,12 +61,14 @@ class Extended_Cache_Backend_Redis extends Zend_Cache_Backend implements Zend_Ca
     const DEFAULT_PORT =  6379;
     const DEFAULT_PERSISTENT = true;
     const DEFAULT_DBINDEX = 0;
+    const DEFAULT_PASSWORD = null;
 
     protected $_options = array(
         'servers' => array(
             array(
                 'host' => self::DEFAULT_HOST,
                 'port' => self::DEFAULT_PORT,
+                'password' => self::DEFAULT_PASSWORD,
                 'persistent' => self::DEFAULT_PERSISTENT,
                 'dbindex' => self::DEFAULT_DBINDEX,
             ),
@@ -113,6 +115,9 @@ class Extended_Cache_Backend_Redis extends Zend_Cache_Backend implements Zend_Ca
                 $result = $this->_redis->pconnect($server['host'], $server['port']);
             } else {
                 $result = $this->_redis->connect($server['host'], $server['port']);
+            }
+            if (array_key_exists('password', $server) AND null != $server['password']) {
+                $this->_redis->auth($server['password']);
             }
 
             if ($result)
